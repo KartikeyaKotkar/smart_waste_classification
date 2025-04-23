@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Classification System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .upload-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            background-color: #f8fafc;
+        }
+        .file-input {
+            margin: 15px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            display: none;
+        }
+        .prediction {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .confidence {
+            font-size: 18px;
+            color: #27ae60;
+        }
+        .image-preview {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .category-card {
+            display: inline-block;
+            margin: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f1f8fe;
+            width: 120px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .category-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Waste Classification System</h1>
+        
+        <div class="upload-section">
+            <h2>Upload an Image of Waste</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="file-input">
+                    <input type="file" name="file" accept="image/*" required>
+                </div>
+                <button type="submit">Classify Waste</button>
+            </form>
+        </div>
+
+        {% if error %}
+            <div class="error">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if pred %}
+        <div class="result-section" style="display: block;">
+            <h2>Classification Result</h2>
+            <div class="prediction">Predicted Category: {{ pred }}</div>
+            <div class="confidence">Confidence: {{ confidence }}%</div>
+            
+            <div>
+                <img src="{{ url_for('static', filename='uploads/' + image_file) }}" 
+                     class="image-preview" 
+                     alt="Uploaded waste image">
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <h3>Possible Waste Categories:</h3>
+                <div class="category-card">
+                    <div class="category-icon">📄</div>
+                    <div>Paper</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🍎</div>
+                    <div>Organic</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🥫</div>
+                    <div>Metal</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🧴</div>
+                    <div>Plastic</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🍷</div>
+                    <div>Glass</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Simple animation for results
+        document.querySelector('form').addEventListener('submit', function() {
+            const resultSection = document.querySelector('.result-section');
+            if (resultSection) {
+                resultSection.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
